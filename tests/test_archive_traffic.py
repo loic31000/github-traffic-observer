@@ -30,7 +30,7 @@ class ArchiveTests(unittest.TestCase):
         clock = datetime(2026, 10, 5, 9, 0, tzinfo=timezone.utc)
         overrides = {"ROOT": self.root, "RAW_ROOT": Path(self.temp.name) / "raw",
                      "now": clock, "TODAY": "2026-10-05", "SNAPSHOT_UTC": "2026-10-05T09:00:00Z",
-                     "OWNER": "owner", "TOKEN": "test-secret", "ARCHIVE_REPOSITORY": "owner/archive", "ALLOW_PUBLIC_TRAFFIC_ARCHIVE": False, "errors": []}
+                     "OWNER": "owner", "TOKEN": "test-secret", "ARCHIVE_REPOSITORY": "owner/archive", "ALLOW_PUBLIC_TRAFFIC_ARCHIVE": False, "ARCHIVE_PRIVATE_HINT": "", "errors": []}
         for name in ["DAILY_FILE", "SNAPSHOTS_FILE", "REFERRERS_FILE", "PATHS_FILE", "ERRORS_FILE", "LATEST_FILE",
                      "REVISIONS_FILE", "REPOSITORIES_FILE", "ANOMALIES_FILE", "METADATA_FILE"]:
             overrides[name] = self.root / getattr(a, name).name
@@ -51,11 +51,13 @@ class ArchiveTests(unittest.TestCase):
 
     def test_public_actions_archive_is_refused_by_default(self):
         with patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}, clear=False), \
+             patch.object(a, "ARCHIVE_PRIVATE_HINT", ""), \
              patch.object(a, "api_get", return_value={"private": False}):
             with self.assertRaises(RuntimeError):
                 a.ensure_archive_privacy()
 
         with patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}, clear=False), \
+             patch.object(a, "ARCHIVE_PRIVATE_HINT", ""), \
              patch.object(a, "api_get", return_value={"private": True}):
             a.ensure_archive_privacy()
 
@@ -64,6 +66,17 @@ class ArchiveTests(unittest.TestCase):
              patch.object(a, "api_get") as mocked:
             a.ensure_archive_privacy()
             mocked.assert_not_called()
+
+        with patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}, clear=False), \
+             patch.object(a, "ARCHIVE_PRIVATE_HINT", "true"), \
+             patch.object(a, "api_get") as mocked:
+            a.ensure_archive_privacy()
+            mocked.assert_not_called()
+
+        with patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}, clear=False), \
+             patch.object(a, "ARCHIVE_PRIVATE_HINT", "false"):
+            with self.assertRaises(RuntimeError):
+                a.ensure_archive_privacy()
 
     def test_import_needs_no_token_and_writes_nothing(self):
         source = str(Path(a.__file__).resolve().parents[1])
