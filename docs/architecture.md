@@ -4,10 +4,10 @@ GitHub Traffic Observer separates **collector code** from **collected data**.
 
 ## Components
 
-1. **Collector** — `scripts/archive_traffic.py`, public and reusable.
-2. **Caller workflow** — runs from a private archive repository.
-3. **Normalized archive** — CSV/JSON files stored in the private repository.
-4. **Raw snapshots** — gzip payloads stored outside Git and optionally uploaded as short-retention Actions artifacts.
+1. **Collector** - `scripts/archive_traffic.py`, public and reusable.
+2. **Caller workflow** - runs from a private archive repository.
+3. **Normalized archive** - CSV/JSON files stored in the private repository.
+4. **Raw snapshots** - gzip payloads stored outside Git and optionally uploaded as short-retention Actions artifacts.
 
 ## Identity
 
