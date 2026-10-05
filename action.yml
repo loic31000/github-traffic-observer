@@ -1,0 +1,23 @@
+name: GitHub Traffic Observer
+description: Archive aggregated GitHub Traffic metrics into a caller-controlled data directory.
+author: Loic Leclair
+
+inputs:
+  data-dir:
+    description: Directory where normalized CSV/JSON history is stored.
+    required: false
+    default: traffic
+  raw-output-dir:
+    description: Directory for compressed raw API snapshots. Prefer runner temp storage.
+    required: false
+    default: .traffic-raw
+
+runs:
+  using: composite
+  steps:
+    - name: Collect GitHub Traffic
+      shell: bash
+      env:
+        TRAFFIC_DATA_DIR: ${{ inputs.data-dir }}
+        RAW_OUTPUT_DIR: ${{ inputs.raw-output-dir }}
+      run: python "${{ github.action_path }}/scripts/archive_traffic.py"
