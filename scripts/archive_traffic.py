@@ -19,6 +19,7 @@ OWNER = os.environ.get("TRAFFIC_OWNER", "")
 TOKEN = os.environ.get("TRAFFIC_GITHUB_TOKEN")
 ARCHIVE_REPOSITORY = os.environ.get("TRAFFIC_ARCHIVE_REPOSITORY") or os.environ.get("GITHUB_REPOSITORY", "")
 ALLOW_PUBLIC_TRAFFIC_ARCHIVE = os.environ.get("ALLOW_PUBLIC_TRAFFIC_ARCHIVE", "").lower() == "true"
+ARCHIVE_PRIVATE_HINT = os.environ.get("TRAFFIC_ARCHIVE_PRIVATE", "").lower()
 RAW_RETENTION_DAYS = max(1, int(os.environ.get("RAW_RETENTION_DAYS", "30")))
 
 ROOT = Path(os.environ.get("TRAFFIC_DATA_DIR", "traffic"))
@@ -82,6 +83,12 @@ def ensure_archive_privacy():
         return
     if not ARCHIVE_REPOSITORY or ALLOW_PUBLIC_TRAFFIC_ARCHIVE:
         return
+    if ARCHIVE_PRIVATE_HINT == "true":
+        return
+    if ARCHIVE_PRIVATE_HINT == "false":
+        raise RuntimeError(
+            "Refusing to persist GitHub Traffic data in a public archive repository."
+        )
 
     metadata = api_get(
         f"{API}/repos/{ARCHIVE_REPOSITORY}",
