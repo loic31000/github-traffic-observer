@@ -1,0 +1,19 @@
+# Collected data must stay out of the public repository
+traffic/
+data/
+raw/
+.traffic-raw/
+
+# Local secrets/config
+.env
+.env.*
+secrets.json
+config.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Temporary/log files
+*.tmp
+*.log
