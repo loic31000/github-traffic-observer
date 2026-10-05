@@ -63,7 +63,7 @@ For most users, pin the stable major version:
 
 ```yaml
 - name: Collect GitHub Traffic
-  uses: loic31000/github-traffic-observer@v1
+  uses: loic31000/github-traffic-observer@v1.0.0
   env:
     TRAFFIC_OWNER: your-github-username
     TRAFFIC_GITHUB_TOKEN: ${{ secrets.TRAFFIC_GITHUB_TOKEN }}
@@ -138,8 +138,8 @@ Never commit GitHub tokens or real Traffic archives to this public repository. S
 
 Stable releases follow semantic versioning. The first Marketplace release is `v1.0.0`.
 
-- `v1` tracks the latest compatible 1.x release for convenient consumption.
-- `v1.0.0` is immutable release intent for reproducible workflows.
+- `v1.0.0` is the first stable release and can be pinned directly.
+- a moving `v1` alias may be added later for the latest compatible 1.x release.
 - an exact commit SHA remains the strongest pin for security-sensitive automation.
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
