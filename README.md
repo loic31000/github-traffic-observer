@@ -79,6 +79,7 @@ For a fine-grained token, GitHub's Traffic endpoints require repository access c
 | `TRAFFIC_GITHUB_TOKEN` | token used for GitHub API requests | required |
 | `TRAFFIC_DATA_DIR` | normalized archive directory | `traffic` |
 | `TRAFFIC_ARCHIVE_REPOSITORY` | repository excluded from discovery; falls back to `GITHUB_REPOSITORY` | caller repository |
+| `TRAFFIC_ARCHIVE_PRIVATE` | optional `true`/`false` visibility hint from the caller workflow; avoids needing the Traffic token to inspect the archive repo | unset |
 | `RAW_OUTPUT_DIR` | raw gzip output directory, ideally runner temp storage | `.traffic-raw` |
 | `RAW_RETENTION_DAYS` | local raw cleanup window | `30` |
 | `GITHUB_API_VERSION` | REST API version header | `2026-03-10` |
