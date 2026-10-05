@@ -59,15 +59,17 @@ The collector refuses, by default, to persist real traffic from GitHub Actions w
 
 Create a **private repository** for the collected data, add a secret named `TRAFFIC_GITHUB_TOKEN`, and use the workflow in `examples/private-archive-workflow.yml` as a starting point.
 
-The caller should pin this project to a trusted tag or commit:
+For most users, pin the stable major version:
 
 ```yaml
 - name: Collect GitHub Traffic
-  uses: loic31000/github-traffic-observer@<trusted-tag-or-commit>
+  uses: loic31000/github-traffic-observer@v1
   env:
     TRAFFIC_OWNER: your-github-username
     TRAFFIC_GITHUB_TOKEN: ${{ secrets.TRAFFIC_GITHUB_TOKEN }}
 ```
+
+For reproducible or security-sensitive workflows, pin an exact release tag such as `v1.0.0` or an exact commit SHA.
 
 For a fine-grained token, GitHub's Traffic endpoints require repository access compatible with the Traffic API. Grant only the permissions and repository scope you actually need.
 
@@ -131,6 +133,20 @@ See [docs/privacy.md](docs/privacy.md).
 ## Security
 
 Never commit GitHub tokens or real Traffic archives to this public repository. See [SECURITY.md](SECURITY.md).
+
+## Releases
+
+Stable releases follow semantic versioning. The first Marketplace release is `v1.0.0`.
+
+- `v1` tracks the latest compatible 1.x release for convenient consumption.
+- `v1.0.0` is immutable release intent for reproducible workflows.
+- an exact commit SHA remains the strongest pin for security-sensitive automation.
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+## Contributing
+
+Bug reports and focused pull requests are welcome. Please keep the project centered on aggregate repository observability and respect the privacy rules in [docs/privacy.md](docs/privacy.md).
 
 ## License
 
