@@ -28,3 +28,12 @@ jobs:
             echo "Real traffic/raw data must not be tracked in the public repository."
             exit 1
           fi
+
+      - name: Reject em dash character
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -n $'\u2014' -- . ':!traffic/**'; then
+            echo "The em dash character is not allowed. Use a normal hyphen instead."
+            exit 1
+          fi
