@@ -1672,7 +1672,7 @@ def main():
     if summary_path:
         def cell(value):
             return (
-                "—"
+                "-"
                 if value == ""
                 or value is None
                 else str(value)
