@@ -1,0 +1,69 @@
+name: Archive GitHub Traffic
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-traffic-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TRAFFIC_OWNER: your-github-username
+      GITHUB_API_VERSION: "2026-03-10"
+      RAW_RETENTION_DAYS: "30"
+
+    steps:
+      - name: Checkout private data repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.13"
+
+      # Replace <trusted-tag-or-commit> with a release tag or exact commit SHA.
+      - name: Collect GitHub Traffic
+        id: collect
+        uses: loic31000/github-traffic-observer@<trusted-tag-or-commit>
+        with:
+          data-dir: traffic
+          raw-output-dir: ${{ runner.temp }}/github-traffic-raw
+        env:
+          TRAFFIC_GITHUB_TOKEN: ${{ secrets.TRAFFIC_GITHUB_TOKEN }}
+
+      - name: Upload raw responses
+        if: ${{ always() && steps.collect.outcome != 'skipped' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: traffic-raw-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/github-traffic-raw/
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Commit private archive
+        if: ${{ always() && steps.collect.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add traffic/
+          if git diff --cached --quiet; then
+            echo "No traffic data changed."
+            exit 0
+          fi
+          SNAPSHOT_UTC="$(date -u +"%Y-%m-%d %H:%M UTC")"
+          git commit -m "chore: archive GitHub traffic ${SNAPSHOT_UTC}"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
