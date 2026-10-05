@@ -1,0 +1,2 @@
+detected_at,repository_id,repository,type,severity,date_utc,metric,value,baseline,details,signature
+2026-01-03T09:17:00Z,1001,example-owner/sample-api,late_revision,info,2026-01-02,views,10,8,GitHub revised views from 8 to 10,1001|late_revision|2026-01-02|views|8|10
