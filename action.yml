@@ -21,3 +21,7 @@ runs:
         TRAFFIC_DATA_DIR: ${{ inputs.data-dir }}
         RAW_OUTPUT_DIR: ${{ inputs.raw-output-dir }}
       run: python "${{ github.action_path }}/scripts/archive_traffic.py"
+
+branding:
+  icon: activity
+  color: blue
