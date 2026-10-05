@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "snapshot_utc": "2026-01-03T09:17:00Z",
+  "owner": "example-owner",
+  "repositories": {
+    "example-owner/sample-api": {
+      "repository_id": 1001,
+      "repository_name": "example-owner/sample-api",
+      "clones_14d": 10,
+      "unique_cloners_14d": 7,
+      "views_14d": 18,
+      "unique_visitors_14d": 9,
+      "endpoints": {
+        "clones": {"status": "ok", "stale": false, "last_attempt_utc": "2026-01-03T09:17:00Z", "last_success_utc": "2026-01-03T09:17:00Z"},
+        "views": {"status": "ok", "stale": false, "last_attempt_utc": "2026-01-03T09:17:00Z", "last_success_utc": "2026-01-03T09:17:00Z"}
+      }
+    }
+  }
+}
